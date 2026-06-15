@@ -9,3 +9,7 @@ They ushered in a new era for natural language processing (NLP)
 
 An *LLM* is a neural network designed to understand, generate, and respond to human-
 like text
+
+# Ressources
+[constrained decoding](https://mbrenndoerfer.com/writing/constrained-decoding-structured-llm-output#why-unconstrained-generation-fails)
+[Qwen3](https://huggingface.co/Qwen/Qwen3-0.6B)
