@@ -1,7 +1,6 @@
 import argparse
 import json
-from .valid_jsn import ValidatJson
-
+from .valid_jsn import ValidatCalls, ValidDefinitions
 if __name__ == "__main__":
     try:
         parser = argparse.ArgumentParser()
@@ -12,9 +11,19 @@ if __name__ == "__main__":
         parser.add_argument("--output", default="data/output/function_calls.json")
         args = parser.parse_args()
 
-        with open(args.input, 'r') as file:
-            prompt = json.load(file)
-            print(prompt)
-
+        with open(args.input, 'r') as file1:
+            try:
+                prompt_data = json.load(file1)
+                prompt_validation = [ValidatCalls.model_validate(i) for i in prompt_data]
+            except json.JSONDecodeError as e:
+                print("Invalid JSON:", e)
+                raise ValueError
+        with open(args.functions_definition, 'r') as file2:
+            try:
+                func_data = json.load(file2)
+                func_validation = [ValidDefinitions.model_validate(j) for j in func_data]
+            except json.JSONDecodeError as e:
+                print("Invalid JSON:", e)
+                raise ValueError
     except Exception as e:
         print(e)
