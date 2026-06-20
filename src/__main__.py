@@ -1,29 +1,21 @@
-import argparse
-import json
-from .valid_jsn import ValidatCalls, ValidDefinitions
-if __name__ == "__main__":
-    try:
-        parser = argparse.ArgumentParser()
-        parser.add_argument(
-            "--functions_definition", default="data/input/functions_definition.json"
-        )
-        parser.add_argument("--input", default="data/input/function_calling_tests.json")
-        parser.add_argument("--output", default="data/output/function_calls.json")
-        args = parser.parse_args()
+from .parsing_json import Parser
+from .Parse_args import ArgParse
+from llm_sdk import Small_LLM_Model
 
-        with open(args.input, 'r') as file1:
-            try:
-                prompt_data = json.load(file1)
-                prompt_validation = [ValidatCalls.model_validate(i) for i in prompt_data]
-            except json.JSONDecodeError as e:
-                print("Invalid JSON:", e)
-                raise ValueError
-        with open(args.functions_definition, 'r') as file2:
-            try:
-                func_data = json.load(file2)
-                func_validation = [ValidDefinitions.model_validate(j) for j in func_data]
-            except json.JSONDecodeError as e:
-                print("Invalid JSON:", e)
-                raise ValueError
-    except Exception as e:
-        print(e)
+if __name__ == "__main__":
+
+    args = ArgParse().get_args
+
+    prompt_data = Parser(args).parse_prompt_data
+    funt_data = Parser(args).parse_func_definitions_data
+
+    model = Small_LLM_Model()
+    ids = model.encode("hello")
+    ids_list = ids.tolist()[0]
+    print(ids_list)
+    logits = model.get_logits_from_input_ids(ids_list)
+    max_logits = max(logits)
+    print(max_logits)
+    index = logits.index(max_logits)
+    decode = model.decode(index)
+    print(decode)

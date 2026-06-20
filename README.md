@@ -11,6 +11,10 @@ An *LLM* is a neural network designed to understand, generate, and respond to hu
 like text
 
 An LLM SDK (Large Language Model Software Development Kit) is a library that lets our code talk to an LLM without manually dealing with HTTP requests, authentication, JSON formatting, retries, and response parsing
+ to solve the problem of the cach:
+ export HF_HOME=/goinfre/user/huggingface_cache
+export TRANSFORMERS_CACHE=/goinfre/user/huggingface_cache
+export UV_CACHE_DIR=/goinfre/user/.uv-cache
 # Ressources
 [constrained decoding](https://mbrenndoerfer.com/writing/constrained-decoding-structured-llm-output#why-unconstrained-generation-fails)
 [Qwen3](https://huggingface.co/Qwen/Qwen3-0.6B)

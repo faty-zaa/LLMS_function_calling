@@ -1,12 +1,20 @@
 [project]
-name = "llms-function-calling"
+name = "llm-fct"
 version = "0.1.0"
 description = "Add your description here"
 readme = "README.md"
 requires-python = ">=3.10"
 dependencies = [
+    "cleanpy>=0.5.1",
     "flake8>=7.3.0",
-    "numpy>=2.2.6",
+    "llm-sdk",
     "pydantic>=2.13.4",
-    "cleanpy==0.5.1"
 ]
+
+[tool.uv.workspace]
+members = [
+    "llm_sdk",
+]
+
+[tool.uv.sources]
+llm-sdk = { workspace = true }
