@@ -19,6 +19,7 @@ class ValidDefinitions(BaseModel):
     parameters: Dict[str, Type]
     returns: Type
 
+
 @dataclass
 class Parser:
     args: ArgParse
@@ -28,9 +29,7 @@ class Parser:
         with open(self.args.input, "r") as file1:
             try:
                 prompt_data = json.load(file1)
-                _ = [
-                    ValidatCalls.model_validate(i) for i in prompt_data
-                ]
+                _ = [ValidatCalls.model_validate(i) for i in prompt_data]
             except json.JSONDecodeError as e:
                 print("Invalid JSON:", e)
                 raise ValueError
@@ -41,9 +40,7 @@ class Parser:
         with open(self.args.functions_definition, "r") as file2:
             try:
                 func_data = json.load(file2)
-                _ = [
-                    ValidDefinitions.model_validate(j) for j in func_data
-                ]
+                _ = [ValidDefinitions.model_validate(j) for j in func_data]
             except json.JSONDecodeError as e:
                 print("Invalid JSON:", e)
                 raise ValueError
