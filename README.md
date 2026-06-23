@@ -16,5 +16,6 @@ An LLM SDK (Large Language Model Software Development Kit) is a library that let
 export TRANSFORMERS_CACHE=/goinfre/user/huggingface_cache
 export UV_CACHE_DIR=/goinfre/user/.uv-cache
 # Ressources
-[constrained decoding](https://mbrenndoerfer.com/writing/constrained-decoding-structured-llm-output#why-unconstrained-generation-fails)
+[constrained decoding -1](https://mbrenndoerfer.com/writing/constrained-decoding-structured-llm-output#why-unconstrained-generation-fails)
+[-2](https://www.aidancooper.co.uk/constrained-decoding/)
 [Qwen3](https://huggingface.co/Qwen/Qwen3-0.6B)
