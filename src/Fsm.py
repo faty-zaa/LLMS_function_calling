@@ -21,7 +21,7 @@ class FSM:
 
     @classmethod
     def allowed_tokens(cls, state):
-        allowed: str = ""
+        allowed: str = "nothing"
 
         if state == State.START_ARR:
             allowed = "["

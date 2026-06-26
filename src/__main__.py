@@ -29,4 +29,4 @@ if __name__ == "__main__":
     # # with open("data.json", "w") as file:
     # #     json.dump(model.decode(generated_ids), file, indent=4)
     # print()
-    print(Constrained("hello wolrd").constrained_decoding.tolist()[0])
+    print(Constrained("hello wolrd").constrained_decoding)
