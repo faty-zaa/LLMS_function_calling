@@ -5,7 +5,7 @@ from typing import Dict
 @dataclass
 class Prompt:
     user_prompt: str
-    # functions_definition: Dict
+    functions_definition: Dict
 
     @property
     def update_prompt(self):
@@ -30,25 +30,25 @@ class Prompt:
             {self.user_prompt}
         <|im_end|>"""
 
-        prompt += """<Tasks>
-        from the JSON file of functions that you can call,
-        you must give me the following keys:
-        -prompt (string): The original natural-language request (prompt)
-        -name (string): The name of the function to call
-        -parameters (object): All required arguments with the correct types
-        </Tasks>
-        """
-        prompt += """
-        <output_format>
-        {
-            "prompt": "original prompt",
-            "name": "function_name",
-            "parameters": {
-                ...
-            }
-        }
-        </output_format>
-        """
+        # prompt += """<Tasks>
+        # from the JSON file of functions that you can call,
+        # you must give me the following keys:
+        # -prompt (string): The original natural-language request (prompt)
+        # -name (string): The name of the function to call
+        # -parameters (object): All required arguments with the correct types
+        # </Tasks>
+        # """
+        # prompt += """
+        # <output_format>
+        # {
+        #     "prompt": "original prompt",
+        #     "name": "function_name",
+        #     "parameters": {
+        #         ...
+        #     }
+        # }
+        # </output_format>
+        # """
         prompt += """
         <rules>
         - Output only valid JSON.
@@ -59,9 +59,10 @@ class Prompt:
         - don't stop until you generate the valid output format
         </rules>
         """
-        # prompt += f"""
-        # <available_functions>
-        # {self.functions_definition}
-        # </available_functions>
-        # """
+        prompt += f"""
+        <available_functions>
+        {self.functions_definition}
+        </available_functions>
+        """
+        prompt += """<|im_start|>assistance {"""
         return prompt

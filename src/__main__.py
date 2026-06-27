@@ -9,8 +9,8 @@ if __name__ == "__main__":
 
     args = ArgParse().get_args
 
-    # prompt_data = Parser(args).parse_prompt_data
-    # funt_data = Parser(args).parse_func_definitions_data
+    prompt_data = Parser(args).parse_prompt_data
+    funt_data = Parser(args).parse_func_definitions_data
 
     # model = Small_LLM_Model()
 
@@ -29,4 +29,4 @@ if __name__ == "__main__":
     # # with open("data.json", "w") as file:
     # #     json.dump(model.decode(generated_ids), file, indent=4)
     # print()
-    print(Constrained("hello wolrd").constrained_decoding)
+    print(Constrained("add 2 to 3", funt_data).constrained_decoding)

@@ -11,17 +11,19 @@ class State(Enum):
     PROMPT = auto()
     PARAM = auto()
     COLON = auto()
+    COMMA_P = auto()
     COMMA = auto()
     END_OBJ = auto()
     DONE = auto()
     RETURN = auto()
+    ANSWER = auto()
 
 
 class FSM:
 
     @classmethod
     def allowed_tokens(cls, state):
-        allowed: str = "nothing"
+        allowed: str = None
 
         if state == State.START_ARR:
             allowed = "["
@@ -30,10 +32,13 @@ class FSM:
             allowed = "{"
 
         if state == State.NAME:
-            allowed = "name"
+            allowed = "'name'"
 
         if state == State.PROMPT:
             allowed = "prompt"
+
+        if state == State.ANSWER:
+            allowed = None
 
         if state == State.PARAM:
             allowed = "parameters"
@@ -41,7 +46,7 @@ class FSM:
         if state == State.COLON:
             allowed = ":"
 
-        if state == State.COMMA:
+        if state == State.COMMA_P:
             allowed = ","
 
         if state == State.END_ARR:
@@ -53,32 +58,48 @@ class FSM:
         return allowed
 
     @classmethod
-    def next_state_for_one_prompt(cls, state):
-
+    def next_state_for_one_prompt(cls, state, i):
         if state == State.START_OBJ:
             state = State.PROMPT
 
-        if state in [State.PROMPT, State.NAME, State.PARAM]:
+        elif state == State.NAME or state == State.PARAM or state == State.PROMPT:
             state = State.COLON
 
-        if state == State.END_OBJ:
+        elif state == State.COLON:
+            state = State.ANSWER
+
+        elif state == State.ANSWER:
+            if i < 2:
+                state = State.COMMA_P
+            else:
+                state = State.END_OBJ
+
+        elif state == State.COMMA_P:
+            if i == 0:
+                state = State.NAME
+                i += 1
+            elif i == 1:
+                state = State.PARAM
+                i += 1
+
+        elif state == State.END_OBJ:
             state = State.DONE
 
-        return state
+        return state, i
 
     @classmethod
     def json_state(cls, state):
         if state == State.START_ARR:
             state = State.OBJ
 
-        if state == State.OBJ:
+        elif state == State.OBJ:
             state = State.COMMA
 
-        if state == State.COMMA:
+        elif state == State.COMMA:
             state = State.OBJ
 
-        if state == State.DONE:
+        elif state == State.DONE:
             state = State.END_ARR
 
-        if state == State.END_ARR:
+        elif state == State.END_ARR:
             state = State.RETURN
