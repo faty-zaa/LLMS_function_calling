@@ -4,6 +4,7 @@ from llm_sdk import Small_LLM_Model
 from .Prompt import Prompt
 import json
 from .C_decoding import Constrained
+from src.functions import Functions
 
 if __name__ == "__main__":
 
@@ -11,7 +12,6 @@ if __name__ == "__main__":
 
     prompt_data = Parser(args).parse_prompt_data
     funt_data = Parser(args).parse_func_definitions_data
-
     # model = Small_LLM_Model()
 
     # prompt = Prompt("add 2 to 3", funt_data).update_prompt

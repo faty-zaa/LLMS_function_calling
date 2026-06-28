@@ -1,97 +1,103 @@
 from enum import Enum, auto
-from typing import Dict
+from typing import Dict, Union, Optional
 
 
 class State(Enum):
-    START_ARR = auto()
-    OBJ = auto()
-    END_ARR = auto()
-    START_OBJ = auto()
-    NAME = auto()
-    PROMPT = auto()
-    PARAM = auto()
-    COLON = auto()
-    COMMA_P = auto()
-    COMMA = auto()
-    END_OBJ = auto()
-    DONE = auto()
-    RETURN = auto()
-    ANSWER = auto()
+    START_ARR: int = auto()
+    OBJ: int = auto()
+    END_ARR: int = auto()
+    START_OBJ: int = auto()
+    NAME: int = auto()
+    PROMPT: int = auto()
+    PARAM: int = auto()
+    COLON: int = auto()
+    COMMA_P: int = auto()
+    COMMA: int = auto()
+    END_OBJ: int = auto()
+    DONE: int = auto()
+    RETURN: int = auto()
+    FUN_NAME: int = auto()
+    USER_PROMT: int = auto()
+    PARAMS: int = auto()
 
 
 class FSM:
 
     @classmethod
-    def allowed_tokens(cls, state):
-        allowed: str = None
+    def allowed_tokens(cls, state: State) -> Optional[str | None]:
+        allowed: Optional[str | None] = None
 
         if state == State.START_ARR:
             allowed = "["
 
-        if state == State.START_OBJ:
+        elif state == State.START_OBJ:
             allowed = "{"
 
-        if state == State.NAME:
-            allowed = "'name'"
+        elif state == State.NAME:
+            allowed = "'name': "
 
-        if state == State.PROMPT:
-            allowed = "prompt"
+        elif state == State.PROMPT:
+            allowed = "'prompt': "
 
-        if state == State.ANSWER:
-            allowed = None
+        elif state == State.USER_PROMT:
+            allowed = "0"
+        
+        elif state == State.FUN_NAME:
+            allowed = "1"
+        
+        elif state == State.PARAMS:
+            allowed = "2"
+            
+        elif state == State.PARAM:
+            allowed = "'parameters': "
 
-        if state == State.PARAM:
-            allowed = "parameters"
-
-        if state == State.COLON:
+        elif state == State.COLON:
             allowed = ":"
 
-        if state == State.COMMA_P:
+        elif state == State.COMMA_P:
             allowed = ","
 
-        if state == State.END_ARR:
+        elif state == State.END_ARR:
             allowed = "]"
 
-        if state == State.END_OBJ:
+        elif state == State.END_OBJ:
             allowed = "}"
 
         return allowed
 
     @classmethod
-    def next_state_for_one_prompt(cls, state, i):
+    def next_state_for_one_prompt(cls, state: State) -> State:
         if state == State.START_OBJ:
             state = State.PROMPT
 
-        elif state == State.NAME or state == State.PARAM or state == State.PROMPT:
-            state = State.COLON
+        elif state == State.PROMPT:
+            state =  State.USER_PROMT
+        
+        elif state == State.USER_PROMT:
+            state = State.NAME
 
-        elif state == State.COLON:
-            state = State.ANSWER
+        elif state == State.NAME:
+            state = State.FUN_NAME
 
-        elif state == State.ANSWER:
-            if i < 2:
-                state = State.COMMA_P
-            else:
-                state = State.END_OBJ
+        elif state == State.FUN_NAME:
+            state = State.PARAM
 
-        elif state == State.COMMA_P:
-            if i == 0:
-                state = State.NAME
-                i += 1
-            elif i == 1:
-                state = State.PARAM
-                i += 1
+        elif state == State.PARAM:
+            state = State.PARAMS
+
+        elif state == State.PARAMS:
+            state = State.END_OBJ
 
         elif state == State.END_OBJ:
             state = State.DONE
 
-        return state, i
+        return state
 
     @classmethod
-    def json_state(cls, state):
+    def json_state(cls, state: State) -> State:
+        
         if state == State.START_ARR:
             state = State.OBJ
-
         elif state == State.OBJ:
             state = State.COMMA
 
@@ -103,3 +109,5 @@ class FSM:
 
         elif state == State.END_ARR:
             state = State.RETURN
+
+        return state

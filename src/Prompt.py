@@ -1,11 +1,11 @@
 from dataclasses import dataclass
-from typing import Dict
+from typing import Dict, List, Any
 
 
 @dataclass
 class Prompt:
     user_prompt: str
-    functions_definition: Dict
+    functions_definition: List[Dict[str, Any]]
 
     @property
     def update_prompt(self):
