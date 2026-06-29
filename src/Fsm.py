@@ -34,10 +34,10 @@ class FSM:
             allowed = "{"
 
         elif state == State.NAME:
-            allowed = "'name': "
+            allowed = "\"name\": "
 
         elif state == State.PROMPT:
-            allowed = "'prompt': "
+            allowed = "\"prompt\": "
 
         elif state == State.USER_PROMT:
             allowed = "0"
@@ -49,7 +49,7 @@ class FSM:
             allowed = "2"
             
         elif state == State.PARAM:
-            allowed = "'parameters': "
+            allowed = "\"parameters\": "
 
         elif state == State.COLON:
             allowed = ":"
