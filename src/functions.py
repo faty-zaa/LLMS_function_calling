@@ -1,20 +1,28 @@
 from typing import Dict, Any, List
+from dataclasses import dataclass
 
+@dataclass
 class Functions:
-    def __init__(self, data: List[Dict[str, Any]]):
-        self.data: Dict[str, Any] = data
+
+        data: Dict[str, Any]
         
-        # the name of the function
-        self.name: str = data['name']
+            # the name of the function
+        @property
+        def name(self) -> str:
+            return self.data['name']
         
-        # the description (add it to the prompt)
-        self.description: str = data["description"]
+            # the description (add it to the prompt)
+        @property
+        def description(self) -> str:
+            return self.data["description"]
         
-        # parameters, should add them to fsm dynamically
-        self.parameters: Dict[str, str] = {
+            # parameters, should add them to fsm dynamically
+        @property
+        def parameters(self) -> Dict[str, str]:
+            return {
             key: value['type']
-            for key, value in data['parameters'].items()
-        }
+            for key, value in self.data['parameters'].items()
+            }
     
         
     

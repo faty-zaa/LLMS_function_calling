@@ -4,7 +4,7 @@ from llm_sdk import Small_LLM_Model
 from .Prompt import Prompt
 import json
 from .C_decoding import Constrained
-from src.functions import Functions
+from .functions import Functions
 
 if __name__ == "__main__":
 
@@ -28,5 +28,5 @@ if __name__ == "__main__":
     #     print(decoded_token, end="", flush=True)
     # # with open("data.json", "w") as file:
     # #     json.dump(model.decode(generated_ids), file, indent=4)
-    # print()
-    print(Constrained("add 2 to 3", funt_data).constrained_decoding)
+    for i in range(len(prompt_data)):
+        print(Constrained(prompt_data[i]['prompt'], funt_data).constrained_decoding)
