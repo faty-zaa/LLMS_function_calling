@@ -3,7 +3,7 @@ from .Parse_args import ArgParse
 from llm_sdk import Small_LLM_Model
 from .Prompt import Prompt
 import json
-from .C_decoding import Constrained
+from .C_decoding import ConstrainedDecoding
 from .functions import Functions
 
 if __name__ == "__main__":
@@ -29,4 +29,6 @@ if __name__ == "__main__":
     # # with open("data.json", "w") as file:
     # #     json.dump(model.decode(generated_ids), file, indent=4)
     for i in range(len(prompt_data)):
-        print(Constrained(prompt_data[i]['prompt'], funt_data).constrained_decoding)
+        print(ConstrainedDecoding(prompt_data[i]['prompt'], funt_data).constrained_decoding)
+    # for i in range(len(funt_data)):
+    #     print(Functions(funt_data[i]).parameters)
