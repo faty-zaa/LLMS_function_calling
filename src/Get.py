@@ -28,9 +28,7 @@ class Get:
     @property
     def get_description(self):
         fun_desc = [
-            self.model.encode(Functions(self.functions_data[i]).description).tolist()[
-                0
-            ]
+            Functions(self.functions_data[i]).description
             for i in range(len(self.functions_data))
         ]
         return fun_desc

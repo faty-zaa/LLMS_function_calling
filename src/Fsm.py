@@ -40,13 +40,13 @@ class FSM:
             allowed = "\"prompt\": "
 
         elif state == State.USER_PROMT:
-            allowed = "0"
+            allowed = "user_prompt"
         
         elif state == State.FUN_NAME:
-            allowed = "1"
+            allowed = "fn_name"
         
         elif state == State.PARAMS:
-            allowed = "2"
+            allowed = "params"
             
         elif state == State.PARAM:
             allowed = "\"parameters\": "

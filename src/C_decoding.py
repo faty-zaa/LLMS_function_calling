@@ -1,10 +1,8 @@
-import numpy
 from .Fsm import FSM, State
 from .Prompt import Prompt
-from llm_sdk import Small_LLM_Model
-from typing import Dict, List
+from typing import Dict
 from .Get import Get
-from .Generated import Generated, dataclass
+from .Generated import Generated, dataclass, Small_LLM_Model, List, numpy
 
 @dataclass
 class ConstrainedDecoding:
@@ -19,8 +17,8 @@ class ConstrainedDecoding:
         generated: List[int] = []
 
         while True:
-
             logits: List[float] = self._model.get_logits_from_input_ids(ids_obj)
+
             logits: List[int] = numpy.array(logits)
             next_token: List[int] = []
 
@@ -31,48 +29,40 @@ class ConstrainedDecoding:
                     if len(generated) < len(function):
 
                         next_token.append(function[len(generated)])
-
+                    else:
+                        next_token.extend(comma)
             masked_logits = numpy.full_like(logits, -numpy.inf)
 
             masked_logits[next_token] = logits[next_token]
 
             valid_logit = numpy.argmax(masked_logits)
 
-            generated.append(valid_logit)
             ids_obj.append(valid_logit)
 
-            if generated in allowed:
-                ids_obj.extend(comma)
+            if valid_logit in comma:
                 break
-
+            generated.append(valid_logit)
         return generated
 
     def get_valid_generated_params(self, value: str, ids_obj: List[int]) -> None:
-        TYPE_MAP = {
-            "int": "integer",
-            "float": "number",
-            "str": "string",
-            "bool": "boolean",
-            "list": "array",
-            "dict": "object",
-        }
+
         if value == "number":
-            Generated().generate_float(ids_obj)
+            Generated(self._model).generate_float(ids_obj)
 
         elif value == "integer":
-            Generated().generate_int(ids_obj)
+            Generated(self._model).generate_int(ids_obj)
 
         elif value == "string":
-            Generated().generate_str(ids_obj)
+            Generated(self._model).generate_str(ids_obj)
 
         elif value == "boolean":
-            Generated().generate_bool(ids_obj)
+            Generated(self._model).generate_bool(ids_obj)
 
         elif value == "array":
-            Generated().generate_list(ids_obj)
+            Generated(self._model).generate_list(ids_obj)
 
         elif value == "object":
-            Generated().generate_dict()
+            Generated(self._model).generate_dict()
 
     @property
     def constrained_decoding(self) -> List:
@@ -80,7 +70,7 @@ class ConstrainedDecoding:
         updated_prompt: str = Prompt(self.prompt, self.functions_data).update_prompt
         ids_obj: List[int] = self._model.encode(updated_prompt).tolist()[0]
         prompt_len = len(ids_obj)
-        n_functions = len(self.functions_data)
+        # n_functions = len(self.functions_data)
         state_obj: State = State.START_OBJ
         comma = self._model.encode(",").tolist()[0]
 
@@ -88,29 +78,32 @@ class ConstrainedDecoding:
 
             allowed_token_json: str = FSM.allowed_tokens(state_obj)
 
-            if allowed_token_json == '0':
+            if allowed_token_json == "user_prompt":
                 valid_logit: List[int] = self._model.encode(
                     '"' + self.prompt + '"'
                 ).tolist()[0]
                 valid_logit.extend(comma)
                 ids_obj.extend(valid_logit)
 
-            elif allowed_token_json == '1':
+            elif allowed_token_json == "fn_name":
                 valid_logit = self.get_valid_generated_function(Get(self.functions_data, self._model).get_name, ids_obj, comma)
                 self._i = Get(self.functions_data, self._model).get_name.index(valid_logit)
 
-            elif allowed_token_json == '2':
+            elif allowed_token_json == "params":
                 allowed = Get(self.functions_data, self._model).get_valid_params[self._i]
-                valid_logit = self._model.encode("{").tolist()[0]
+                ids_obj.extend(self._model.encode("{").tolist()[0])
                 comma_count = 0
                 for key, value in allowed.items():
-                    valid_logit.extend(self._model.encode("\""+ key + "\"" + ": ").tolist()[0])
-                    # valid_logit.extend(self.get_valid_generated_params)
-                    if comma_count < len(list(allowed.keys())) - 1:
-                        valid_logit.extend(comma)
-                        comma_count += 1
-                ids_obj.extend(valid_logit)
+                    ids_obj.extend(
+                        self._model.encode('"' + key + '"' + ": ").tolist()[0]
+                    )
+                    self.get_valid_generated_params(value, ids_obj)
+                    #here you have to check comma
 
+                    
+                    # if comma_count < len(list(allowed.keys())) - 1:
+                    #     ids_obj.extend(comma)
+                    #     comma_count += 1
             else:
                 valid_logit: List[int] = self._model.encode(allowed_token_json).tolist()[0]
                 ids_obj.extend(valid_logit)

@@ -100,7 +100,7 @@
       "version": 22,
       "versionNonce": 1575147762,
       "isDeleted": false,
-      "boundElements": null,
+      "boundElements": [],
       "updated": 1782580588320,
       "link": null,
       "locked": false,
@@ -139,7 +139,7 @@
       "version": 39,
       "versionNonce": 1855131246,
       "isDeleted": false,
-      "boundElements": null,
+      "boundElements": [],
       "updated": 1782580592004,
       "link": null,
       "locked": false,
@@ -183,7 +183,7 @@
       "version": 71,
       "versionNonce": 447050862,
       "isDeleted": false,
-      "boundElements": null,
+      "boundElements": [],
       "updated": 1782580753829,
       "link": null,
       "locked": false,
@@ -220,7 +220,7 @@
       "version": 43,
       "versionNonce": 917924014,
       "isDeleted": false,
-      "boundElements": null,
+      "boundElements": [],
       "updated": 1782580621805,
       "link": null,
       "locked": false,
@@ -396,10 +396,7 @@
       ],
       "pressures": [],
       "simulatePressure": true,
-      "lastCommittedPoint": [
-        -391,
-        91
-      ]
+      "lastCommittedPoint": null
     },
     {
       "id": "0NdX09vsKiRRRtAHAIPqb",
@@ -424,7 +421,7 @@
       "version": 26,
       "versionNonce": 885907890,
       "isDeleted": false,
-      "boundElements": null,
+      "boundElements": [],
       "updated": 1782580622485,
       "link": null,
       "locked": false,
@@ -532,10 +529,7 @@
       ],
       "pressures": [],
       "simulatePressure": true,
-      "lastCommittedPoint": [
-        54,
-        -1
-      ]
+      "lastCommittedPoint": null
     },
     {
       "id": "2k7Im6LUQu6ybhp6Sb7VM",
@@ -560,7 +554,7 @@
       "version": 59,
       "versionNonce": 1009443890,
       "isDeleted": false,
-      "boundElements": null,
+      "boundElements": [],
       "updated": 1782580668371,
       "link": null,
       "locked": false,
@@ -597,7 +591,7 @@
       "version": 51,
       "versionNonce": 137001838,
       "isDeleted": false,
-      "boundElements": null,
+      "boundElements": [],
       "updated": 1782580675645,
       "link": null,
       "locked": false,
@@ -805,10 +799,7 @@
       ],
       "pressures": [],
       "simulatePressure": true,
-      "lastCommittedPoint": [
-        153,
-        -153
-      ]
+      "lastCommittedPoint": null
     },
     {
       "id": "GqqbVg0pscZPBOnTU4lfh",
@@ -833,7 +824,7 @@
       "version": 41,
       "versionNonce": 1497887982,
       "isDeleted": false,
-      "boundElements": null,
+      "boundElements": [],
       "updated": 1782580676845,
       "link": null,
       "locked": false,
@@ -1001,10 +992,7 @@
       ],
       "pressures": [],
       "simulatePressure": true,
-      "lastCommittedPoint": [
-        25,
-        23
-      ]
+      "lastCommittedPoint": null
     },
     {
       "id": "y6mQ9L0X_h4SB02pySJYI",
@@ -1029,7 +1017,7 @@
       "version": 57,
       "versionNonce": 1782510962,
       "isDeleted": false,
-      "boundElements": null,
+      "boundElements": [],
       "updated": 1782580750864,
       "link": null,
       "locked": false,
@@ -1040,6 +1028,43 @@
       "verticalAlign": "top",
       "containerId": null,
       "originalText": "[hello, ' world', 'I'm', 'AI' ]",
+      "autoResize": true,
+      "lineHeight": 1.25
+    },
+    {
+      "id": "bIRyFmvDcWEo1S17sy2v-",
+      "type": "text",
+      "x": 594.929817199707,
+      "y": -382,
+      "width": 240.93978881835938,
+      "height": 75,
+      "angle": 0,
+      "strokeColor": "#1e1e1e",
+      "backgroundColor": "transparent",
+      "fillStyle": "solid",
+      "strokeWidth": 2,
+      "strokeStyle": "solid",
+      "roughness": 1,
+      "opacity": 100,
+      "groupIds": [],
+      "frameId": null,
+      "index": "aI",
+      "roundness": null,
+      "seed": 1537670684,
+      "version": 37,
+      "versionNonce": 1380525092,
+      "isDeleted": false,
+      "boundElements": null,
+      "updated": 1782966029775,
+      "link": null,
+      "locked": false,
+      "text": "uv run\nbasemodel for all classes\n",
+      "fontSize": 20,
+      "fontFamily": 5,
+      "textAlign": "left",
+      "verticalAlign": "top",
+      "containerId": null,
+      "originalText": "uv run\nbasemodel for all classes\n",
       "autoResize": true,
       "lineHeight": 1.25
     }
