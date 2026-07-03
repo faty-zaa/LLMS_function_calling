@@ -1,7 +1,8 @@
-from pydantic import BaseModel
+from pydantic import BaseModel, ValidationError
 from typing import Dict, List, Any
 from dataclasses import dataclass
 from .Parse_args import ArgParse
+from argparse import Namespace
 import json
 
 
@@ -22,7 +23,7 @@ class ValidDefinitions(BaseModel):
 
 @dataclass
 class Parser:
-    args: ArgParse
+    args: Namespace
 
     @property
     def parse_prompt_data(self) -> List[Dict[str, str]]:
@@ -32,7 +33,11 @@ class Parser:
                 _ = [ValidatCalls.model_validate(i) for i in prompt_data]
             except json.JSONDecodeError as e:
                 print("Invalid JSON:", e)
-                raise ValueError
+                raise
+            except ValidationError as e:
+                print("Invalid schema:")
+                print(e)
+                raise
         return prompt_data
 
     @property

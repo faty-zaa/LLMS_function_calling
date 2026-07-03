@@ -7,7 +7,7 @@ from .Generated import Generated, dataclass, Small_LLM_Model, List, numpy
 @dataclass
 class ConstrainedDecoding:
 
-    prompt: str
+    prompts: str
     functions_data: Dict
     _i: int = -1
     _model: Small_LLM_Model = Small_LLM_Model()
@@ -57,24 +57,23 @@ class ConstrainedDecoding:
         elif value == "boolean":
             Generated(self._model).generate_bool(ids_obj)
 
+    def constrained_decoding(self, prompt) -> List:
 
-    @property
-    def constrained_decoding(self) -> List:
-
-        updated_prompt: str = Prompt(self.prompt, self.functions_data).update_prompt
+        updated_prompt: str = Prompt(prompt, self.functions_data).update_prompt
         ids_obj: List[int] = self._model.encode(updated_prompt).tolist()[0]
         prompt_len = len(ids_obj)
         state_obj: State = State.START_OBJ
         comma = self._model.encode(",").tolist()[0]
         quote = self._model.encode('"').tolist()[0]
-        
+
         while state_obj != State.DONE:
 
             allowed_token_json: str = FSM.allowed_tokens(state_obj)
 
             if allowed_token_json == "user_prompt":
+                prompt = prompt.replace("\\", "\\\\").replace('"', '\\"')
                 valid_logit: List[int] = self._model.encode(
-                    '"' + self.prompt + '"'
+                    '"' + prompt + '"'
                 ).tolist()[0]
                 valid_logit.extend(comma)
                 ids_obj.extend(valid_logit)
@@ -108,4 +107,24 @@ class ConstrainedDecoding:
 
             state_obj = FSM.next_state_for_one_prompt(state_obj)
         ids_obj = ids_obj[prompt_len:]
-        return self._model.decode(ids_obj)
+        return ids_obj
+
+    def json_format(self):
+        state_json = State.START_ARR
+        position = 0
+        count = len(self.prompts)
+        ids_json = []
+        while state_json != State.RETURN and position < count:
+            allowed = FSM.allowed_tokens(state_json)
+            if state_json == State.OBJ:
+                ids_json.extend(self.constrained_decoding(self.prompts[position]['prompt']))
+                position += 1
+                if position == count:
+                    state_json = State.END_ARR
+                    allowed = FSM.allowed_tokens(state_json)
+                    ids_json.extend(self._model.encode(allowed).tolist()[0])
+            elif allowed is not None:
+                ids_json.extend(self._model.encode(allowed).tolist()[0])
+
+            state_json = FSM.json_state(state_json)
+        return self._model.decode(ids_json)

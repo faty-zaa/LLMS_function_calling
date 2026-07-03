@@ -46,7 +46,7 @@ class Generated:
                 count -= 1
             elif count == 0:
                 break
-                
+
             ids_obj.append(valid)
 
     def generate_str(self, ids_obj):
@@ -65,4 +65,15 @@ class Generated:
             ids_obj.append(valid)
 
     def generate_bool(self, ids_obj):
-        pass
+        true_ids = self.model.encode("true").tolist()[0]
+        false_ids = self.model.encode("false").tolist()[0]
+
+        logits = numpy.array(self.model.get_logits_from_input_ids(ids_obj))
+
+        true_score = logits[true_ids[0]]
+        false_score = logits[false_ids[0]]
+
+        if true_score > false_score:
+            ids_obj.extend(true_ids)
+        else:
+            ids_obj.extend(false_ids)

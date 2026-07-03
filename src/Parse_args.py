@@ -1,13 +1,12 @@
 import argparse
-from dataclasses import dataclass
+from dataclasses import dataclass, field
 
 
 @dataclass
 class ArgParse:
-    parser: argparse.ArgumentParser = argparse.ArgumentParser()
+    parser: argparse.ArgumentParser = field(default_factory=argparse.ArgumentParser)
 
-    @property
-    def get_args(self):
+    def __post_init__(self):
         self.parser.add_argument(
             "--functions_definition",
             dest="functions_definition",
@@ -21,4 +20,7 @@ class ArgParse:
         self.parser.add_argument(
             "--output", dest="output", default="data/output/function_calls.json"
         )
+
+    @property
+    def get_args(self):
         return self.parser.parse_args()

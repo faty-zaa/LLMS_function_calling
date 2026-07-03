@@ -11,7 +11,6 @@ class State(Enum):
     PROMPT: int = auto()
     PARAM: int = auto()
     COLON: int = auto()
-    COMMA_P: int = auto()
     COMMA: int = auto()
     END_OBJ: int = auto()
     DONE: int = auto()
@@ -54,8 +53,11 @@ class FSM:
         elif state == State.COLON:
             allowed = ":"
 
-        elif state == State.COMMA_P:
+        elif state == State.COMMA:
             allowed = ","
+
+        elif state == State.OBJ:
+            allowed = "obj"
 
         elif state == State.END_ARR:
             allowed = "]"
@@ -103,9 +105,6 @@ class FSM:
 
         elif state == State.COMMA:
             state = State.OBJ
-
-        elif state == State.DONE:
-            state = State.END_ARR
 
         elif state == State.END_ARR:
             state = State.RETURN

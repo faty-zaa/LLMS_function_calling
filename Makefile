@@ -8,7 +8,7 @@ install:
 	@$(UV) sync || true
 
 run:
-	@$(PYTHON) -m $(SRC) || true
+	@$(UV) run $(PYTHON) -m $(SRC) || true
 
 debug:
 	@$(PY) -m $(PDB) $(SRC) || true
