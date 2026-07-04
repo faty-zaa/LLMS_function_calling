@@ -17,9 +17,5 @@ clean:
 	@cleanpy .
 
 lint:
-	@flake8 . || true
-	@mypy src \
-	 --warn-return-any \
-    --warn-unused-ignores \
-    --disallow-untyped-defs \
-    --check-untyped-defs || true
+	@flake8 $(SRC) || true
+	@mypy $(SRC) --warn-return-any --warn-unused-ignores --ignore-missing-imports --disallow-untyped-defs --check-untyped-defs --follow-imports=skip || true

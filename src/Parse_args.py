@@ -1,12 +1,15 @@
 import argparse
 from dataclasses import dataclass, field
+from argparse import Namespace
 
 
 @dataclass
 class ArgParse:
-    parser: argparse.ArgumentParser = field(default_factory=argparse.ArgumentParser)
+    parser: argparse.ArgumentParser = field(
+        default_factory=argparse.ArgumentParser
+    )
 
-    def __post_init__(self):
+    def __post_init__(self) -> None:
         self.parser.add_argument(
             "--functions_definition",
             dest="functions_definition",
@@ -14,13 +17,17 @@ class ArgParse:
         )
 
         self.parser.add_argument(
-            "--input", dest="input", default="data/input/function_calling_tests.json"
+            "--input",
+            dest="input",
+            default="data/input/function_calling_tests.json",
         )
 
         self.parser.add_argument(
-            "--output", dest="output", default="data/output/function_calls.json"
+            "--output",
+            dest="output",
+            default="data/output/function_calls.json",
         )
 
     @property
-    def get_args(self):
+    def get_args(self) -> Namespace:
         return self.parser.parse_args()

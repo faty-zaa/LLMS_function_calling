@@ -1,23 +1,23 @@
 from enum import Enum, auto
-from typing import Dict, Union, Optional
+from typing import Optional
 
 
 class State(Enum):
-    START_ARR: int = auto()
-    OBJ: int = auto()
-    END_ARR: int = auto()
-    START_OBJ: int = auto()
-    NAME: int = auto()
-    PROMPT: int = auto()
-    PARAM: int = auto()
-    COLON: int = auto()
-    COMMA: int = auto()
-    END_OBJ: int = auto()
-    DONE: int = auto()
-    RETURN: int = auto()
-    FUN_NAME: int = auto()
-    USER_PROMT: int = auto()
-    PARAMS: int = auto()
+    START_ARR = auto()
+    OBJ = auto()
+    END_ARR = auto()
+    START_OBJ = auto()
+    NAME = auto()
+    PROMPT = auto()
+    PARAM = auto()
+    COLON = auto()
+    COMMA = auto()
+    END_OBJ = auto()
+    DONE = auto()
+    RETURN = auto()
+    FUN_NAME = auto()
+    USER_PROMT = auto()
+    PARAMS = auto()
 
 
 class FSM:
@@ -33,22 +33,22 @@ class FSM:
             allowed = "{"
 
         elif state == State.NAME:
-            allowed = "\"name\": "
+            allowed = '"name": '
 
         elif state == State.PROMPT:
-            allowed = "\"prompt\": "
+            allowed = '"prompt": '
 
         elif state == State.USER_PROMT:
             allowed = "user_prompt"
-        
+
         elif state == State.FUN_NAME:
             allowed = "fn_name"
-        
+
         elif state == State.PARAMS:
             allowed = "params"
-            
+
         elif state == State.PARAM:
-            allowed = "\"parameters\": "
+            allowed = '"parameters": '
 
         elif state == State.COLON:
             allowed = ":"
@@ -73,8 +73,8 @@ class FSM:
             state = State.PROMPT
 
         elif state == State.PROMPT:
-            state =  State.USER_PROMT
-        
+            state = State.USER_PROMT
+
         elif state == State.USER_PROMT:
             state = State.NAME
 
@@ -97,7 +97,7 @@ class FSM:
 
     @classmethod
     def json_state(cls, state: State) -> State:
-        
+
         if state == State.START_ARR:
             state = State.OBJ
         elif state == State.OBJ:

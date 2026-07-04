@@ -1,24 +1,27 @@
 from .Fsm import FSM, State
 from .Prompt import Prompt
-from typing import Dict
+from typing import Dict, Any
 from .Get import Get
 from .Generated import Generated, dataclass, Small_LLM_Model, List, numpy
+
 
 @dataclass
 class ConstrainedDecoding:
 
-    prompts: str
-    functions_data: Dict
+    prompts: List[Dict[str, Any]]
+    functions_data: List[Dict[str, Any]]
     _i: int = -1
     _model: Small_LLM_Model = Small_LLM_Model()
 
-    def get_valid_generated_function(self, allowed: List[List[int]], ids_obj:List[int], comma: List[int]) -> List[int]:
+    def get_valid_generated_function(
+        self, allowed: List[List[int]], ids_obj: List[int], comma: List[int]
+    ) -> List[int]:
 
         generated: List[int] = []
         while True:
-            logits: List[float] = self._model.get_logits_from_input_ids(ids_obj)
-
-            logits: List[int] = numpy.array(logits)
+            logits = numpy.array(
+                self._model.get_logits_from_input_ids(ids_obj)
+            )
             next_token: List[int] = []
 
             for function in allowed:
@@ -34,7 +37,7 @@ class ConstrainedDecoding:
 
             masked_logits[next_token] = logits[next_token]
 
-            valid_logit = numpy.argmax(masked_logits)
+            valid_logit = int(numpy.argmax(masked_logits))
 
             if valid_logit in comma:
                 break
@@ -43,7 +46,9 @@ class ConstrainedDecoding:
             generated.append(valid_logit)
         return generated
 
-    def get_valid_generated_params(self, value: str, ids_obj: List[int]) -> None:
+    def get_valid_generated_params(
+        self, value: str, ids_obj: List[int]
+    ) -> None:
 
         if value == "number":
             Generated(self._model).generate_float(ids_obj)
@@ -57,7 +62,7 @@ class ConstrainedDecoding:
         elif value == "boolean":
             Generated(self._model).generate_bool(ids_obj)
 
-    def constrained_decoding(self, prompt) -> List:
+    def constrained_decoding(self, prompt: str) -> List[int]:
 
         updated_prompt: str = Prompt(prompt, self.functions_data).update_prompt
         ids_obj: List[int] = self._model.encode(updated_prompt).tolist()[0]
@@ -68,7 +73,7 @@ class ConstrainedDecoding:
 
         while state_obj != State.DONE:
 
-            allowed_token_json: str = FSM.allowed_tokens(state_obj)
+            allowed_token_json: str | None = FSM.allowed_tokens(state_obj)
 
             if allowed_token_json == "user_prompt":
                 prompt = prompt.replace("\\", "\\\\").replace('"', '\\"')
@@ -80,13 +85,21 @@ class ConstrainedDecoding:
 
             elif allowed_token_json == "fn_name":
                 ids_obj.extend(quote)
-                valid_logit = self.get_valid_generated_function(Get(self.functions_data, self._model).get_name, ids_obj, comma)
-                self._i = Get(self.functions_data, self._model).get_name.index(valid_logit)
+                valid_logit = self.get_valid_generated_function(
+                    Get(self.functions_data, self._model).get_name,
+                    ids_obj,
+                    comma,
+                )
+                self._i = Get(self.functions_data, self._model).get_name.index(
+                    valid_logit
+                )
                 ids_obj.extend(quote)
                 ids_obj.extend(comma)
 
             elif allowed_token_json == "params":
-                allowed = Get(self.functions_data, self._model).get_valid_params[self._i]
+                allowed = Get(
+                    self.functions_data, self._model
+                ).get_valid_params[self._i]
                 ids_obj.extend(self._model.encode("{").tolist()[0])
                 comma_count = 0
                 for key, value in allowed.items():
@@ -98,18 +111,19 @@ class ConstrainedDecoding:
                     if comma_count < len(list(allowed.keys())) - 1:
                         ids_obj.extend(comma)
                         comma_count += 1
-                ids_obj.extend(
-                    self._model.encode("}").tolist()[0]
-                )
+                ids_obj.extend(self._model.encode("}").tolist()[0])
             else:
-                valid_logit: List[int] = self._model.encode(allowed_token_json).tolist()[0]
-                ids_obj.extend(valid_logit)
+                if allowed_token_json is not None:
+                    valid_logit = self._model.encode(
+                        allowed_token_json
+                    ).tolist()[0]
+                    ids_obj.extend(valid_logit)
 
             state_obj = FSM.next_state_for_one_prompt(state_obj)
         ids_obj = ids_obj[prompt_len:]
         return ids_obj
 
-    def json_format(self):
+    def json_format(self) -> Any:
         state_json = State.START_ARR
         position = 0
         count = len(self.prompts)
@@ -117,12 +131,17 @@ class ConstrainedDecoding:
         while state_json != State.RETURN and position < count:
             allowed = FSM.allowed_tokens(state_json)
             if state_json == State.OBJ:
-                ids_json.extend(self.constrained_decoding(self.prompts[position]['prompt']))
+                ids_json.extend(
+                    self.constrained_decoding(self.prompts[position]["prompt"])
+                )
                 position += 1
                 if position == count:
                     state_json = State.END_ARR
                     allowed = FSM.allowed_tokens(state_json)
-                    ids_json.extend(self._model.encode(allowed).tolist()[0])
+                    if allowed is not None:
+                        ids_json.extend(
+                            self._model.encode(allowed).tolist()[0]
+                        )
             elif allowed is not None:
                 ids_json.extend(self._model.encode(allowed).tolist()[0])
 

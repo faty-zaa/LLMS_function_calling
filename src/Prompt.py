@@ -8,14 +8,15 @@ class Prompt:
     functions_definition: List[Dict[str, Any]]
 
     @property
-    def update_prompt(self):
+    def update_prompt(self) -> str:
         prompt: str = ""
 
         prompt += """<|im_start|>assistant
         You are an AI assistant specialized in function calling
         by translating natural language requests into precise function
         calls with typed arguments, You do not answer the question directly
-        Instead, you provides the tools to solve it: the right function name and 
+        Instead, you provides the tools to solve it:
+        the right function name and
         the correct arguments with proper types
         <|im_end|>
         """
@@ -56,7 +57,11 @@ class Prompt:
         - Do not include markdown.
         - Do not include code fences.
         - Use exactly one function from the provided definitions.
-        - don't stop until you generate the valid output format
+        - Do not stop until you generate the valid output format.
+        - For regex-based string substitution, choose a regex that matches the intended repeated pattern.
+        - If the user asks to replace all numbers, prefer a pattern like '\\d+' rather than '\\d'.
+        - If the user asks to replace all vowels, prefer a character class like '[aeiouAEIOU]'.
+        - If the user says "all occurrences" or "every", make the regex match the whole repeated pattern rather than a single character.
         </rules>
         """
         prompt += f"""
@@ -64,5 +69,4 @@ class Prompt:
         {self.functions_definition}
         </available_functions>
         """
-        prompt += """<|im_start|>assistance {"""
         return prompt

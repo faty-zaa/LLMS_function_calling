@@ -1,7 +1,6 @@
 from pydantic import BaseModel, ValidationError
-from typing import Dict, List, Any
+from typing import Dict, List, Any, Literal
 from dataclasses import dataclass
-from .Parse_args import ArgParse
 from argparse import Namespace
 import json
 
@@ -11,7 +10,7 @@ class ValidatCalls(BaseModel):
 
 
 class Type(BaseModel):
-    type: str
+    type: Literal["number", "string", "boolean", "integer"]
 
 
 class ValidDefinitions(BaseModel):
