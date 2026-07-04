@@ -27,6 +27,18 @@ class ArgParse:
             dest="output",
             default="data/output/function_calls.json",
         )
+        self.parser.add_argument(
+            "--model",
+            default="Qwen/Qwen3-0.6B",
+            choices=[
+                "Qwen/Qwen3-0.6B",
+                "Qwen/Qwen3-1.7B",
+                "Qwen/Qwen3-4B",
+                "Qwen/Qwen3-8B",
+                "Qwen/Qwen2.5-0.5B-Instruct",
+                "Qwen/Qwen2.5-1.5B-Instruct",
+            ],
+        )
 
     @property
     def get_args(self) -> Namespace:

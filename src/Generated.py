@@ -92,6 +92,8 @@ class Generated:
             valid = int(numpy.argmax(logits))
             decoded = self.model.decode(valid)
             if '"' in decoded and not ids_obj[-1] == escape:
+                if "+" in decoded:
+                    ids_obj.append(self.model.encode("+").tolist()[0][0])
                 ids_obj.append(quote)
                 break
             ids_obj.append(valid)

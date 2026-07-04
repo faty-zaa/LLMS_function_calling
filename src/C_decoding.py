@@ -2,6 +2,7 @@ from .Fsm import FSM, State
 from .Prompt import Prompt
 from typing import Dict, Any
 from .Get import Get
+from .Parse_args import ArgParse
 from .Generated import Generated, dataclass, Small_LLM_Model, List, numpy
 
 
@@ -11,7 +12,8 @@ class ConstrainedDecoding:
     prompts: List[Dict[str, Any]]
     functions_data: List[Dict[str, Any]]
     _i: int = -1
-    _model: Small_LLM_Model = Small_LLM_Model()
+    _args = ArgParse().get_args
+    _model: Small_LLM_Model = Small_LLM_Model(_args.model)
 
     def get_valid_generated_function(
         self, allowed: List[List[int]], ids_obj: List[int], comma: List[int]

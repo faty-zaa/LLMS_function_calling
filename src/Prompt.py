@@ -58,11 +58,16 @@ class Prompt:
         - Do not include code fences.
         - Use exactly one function from the provided definitions.
         - Do not stop until you generate the valid output format.
-        - For regex-based string substitution, choose a regex that matches the intended repeated pattern.
-        - If the user asks to replace all numbers, prefer a pattern like '\\d+' rather than '\\d'.
-        - If the user asks to replace all vowels, prefer a character class like '[aeiouAEIOU]'.
-        - If the user says "all occurrences" or "every", make the regex match the whole repeated pattern rather than a single character.
-        </rules>
+        - For regex-based string substitution,
+        choose a regex that matches the intended repeated pattern.
+        """
+        prompt += """
+        <strict_rules>
+        Regex mappings:
+            vowels : "[aeiouAEIOU]"
+            digits : "\\d+"
+            whitespace : "\\s"
+        </strict_rules>
         """
         prompt += f"""
         <available_functions>
