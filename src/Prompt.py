@@ -61,14 +61,14 @@ class Prompt:
         - For regex-based string substitution,
         choose a regex that matches the intended repeated pattern.
         """
-        prompt += """
-        <strict_rules>
-        Regex mappings:
-            vowels : "[aeiouAEIOU]"
-            digits : "\\d+"
-            whitespace : "\\s"
-        </strict_rules>
-        """
+        # prompt += """
+        # <strict_rules>
+        # Regex mappings:
+        #     vowels : "[aeiouAEIOU]"
+        #     digits : "\\d+"
+        #     whitespace : "\\s"
+        # </strict_rules>
+        # """
         prompt += f"""
         <available_functions>
         {self.functions_definition}

@@ -122,6 +122,7 @@ class ConstrainedDecoding:
                     ids_obj.extend(valid_logit)
 
             state_obj = FSM.next_state_for_one_prompt(state_obj)
+            print(self._model.decode(ids_obj[prompt_len:]))
         ids_obj = ids_obj[prompt_len:]
         return ids_obj
 
